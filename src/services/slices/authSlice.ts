@@ -62,18 +62,6 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-export const logoutUser = createAsyncThunk(
-  'auth/logout',
-  async (_, { rejectWithValue }) => {
-    try {
-      await logoutApi();
-      return null;
-    } catch (error) {
-      return rejectWithValue((error as Error).message);
-    }
-  }
-);
-
 export const checkUserAuth = createAsyncThunk(
   'auth/checkAuth',
   async (_, { rejectWithValue }) => {
@@ -86,6 +74,20 @@ export const checkUserAuth = createAsyncThunk(
     } catch (error) {
       localStorage.removeItem('refreshToken');
       deleteCookie('accessToken');
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
+export const logoutUser = createAsyncThunk(
+  'auth/logout',
+  async (_, { rejectWithValue }) => {
+    try {
+      await logoutApi();
+      localStorage.removeItem('refreshToken');
+      deleteCookie('accessToken');
+      return null;
+    } catch (error) {
       return rejectWithValue((error as Error).message);
     }
   }
@@ -140,6 +142,7 @@ export const authSlice = createSlice({
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.isLoading = false;
+        state.error = null;
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.isLoading = false;

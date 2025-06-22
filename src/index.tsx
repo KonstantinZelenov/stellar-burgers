@@ -12,7 +12,12 @@ const root = ReactDOMClient.createRoot(container!);
 
 root.render(
   <React.StrictMode>
-    <BrowserRouter basename='/'>
+    <BrowserRouter
+      future={{
+        v7_relativeSplatPath: true,
+        v7_startTransition: true
+      }}
+    >
       <Provider store={store}>
         <DndProvider backend={HTML5Backend}>
           <App />

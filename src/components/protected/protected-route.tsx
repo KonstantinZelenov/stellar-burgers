@@ -1,5 +1,5 @@
 import { Navigate, useLocation } from 'react-router-dom';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 import { useSelector } from '../../services/store';
 import { Preloader } from '@ui';
 
@@ -13,39 +13,21 @@ export const ProtectedRoute: FC<ProtectedRouteProps> = ({
   children
 }) => {
   const location = useLocation();
-  const { user, isLoading, error } = useSelector((state) => state.auth);
-  const [authChecked, setAuthChecked] = useState(false);
+  const { user, isLoading } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    if (!isLoading && !authChecked) {
-      setAuthChecked(true);
-    }
-  }, [isLoading, authChecked]);
-
-  if (!authChecked) {
+  if (isLoading) {
     return <Preloader />;
   }
 
-  if (error && !onlyUnAuth) {
-    console.error('Auth error:', error);
-    return (
-      <Navigate
-        to='/error'
-        state={{
-          from: location,
-          error: 'Ошибка авторизации. Пожалуйста, войдите снова.'
-        }}
-        replace
-      />
+  if (onlyUnAuth) {
+    return user ? (
+      <Navigate to={location.state?.from || '/'} replace />
+    ) : (
+      <>{children}</>
     );
   }
 
-  if (onlyUnAuth && user) {
-    const redirectTo = location.state?.from?.pathname || '/';
-    return <Navigate to={redirectTo} replace />;
-  }
-
-  if (!onlyUnAuth && !user) {
+  if (!user) {
     return (
       <Navigate
         to='/login'
