@@ -1,23 +1,43 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useEffect } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
-import { useParams } from 'react-router-dom';
-import { useSelector } from '../../services/store';
-import { RootState } from '../../services/store';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from '../../services/store';
 import { TOrder } from '@utils-types';
+import { fetchOrderByNumber } from '../../services/slices/orderSlice';
+import { selectUser } from '../../services/slices/authSlice';
 
 export const OrderInfo: FC = () => {
   const { number } = useParams<{ number?: string }>();
   const orderNumber = number ? parseInt(number) : 0;
-  const { orders, isLoading } = useSelector((state: RootState) => state.feed);
-  const allIngredients = useSelector(
-    (state: RootState) => state.ingredients.items
-  );
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const user = useSelector(selectUser);
 
-  const orderData = orders.find(
-    (order: TOrder) => order.number === orderNumber
+  const { orders: feedOrders } = useSelector((state) => state.feed);
+  const { orders: profileOrders, currentOrder } = useSelector(
+    (state) => state.orders
   );
+  const allIngredients = useSelector((state) => state.ingredients.items);
+
+  useEffect(() => {
+    if (window.location.pathname.startsWith('/profile/orders') && !user) {
+      navigate('/login');
+      return;
+    }
+  }, [user, navigate]);
+
+  useEffect(() => {
+    if (orderNumber && !currentOrder) {
+      dispatch(fetchOrderByNumber(orderNumber));
+    }
+  }, [orderNumber, currentOrder, dispatch]);
+
+  const orderData =
+    currentOrder ||
+    feedOrders.find((order: TOrder) => order.number === orderNumber) ||
+    profileOrders.find((order: TOrder) => order.number === orderNumber);
 
   const orderInfo = useMemo(() => {
     if (!orderData || !allIngredients.length) return null;
@@ -59,7 +79,7 @@ export const OrderInfo: FC = () => {
     };
   }, [orderData, allIngredients]);
 
-  if (isLoading || !orderInfo) {
+  if (!orderInfo) {
     return <Preloader />;
   }
 

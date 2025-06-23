@@ -40,7 +40,6 @@ export const Register: FC = () => {
       if (registerUser.fulfilled.match(resultAction)) {
         navigate('/');
       } else if (resultAction.payload) {
-        // Убедимся, что payload - строка
         setErrorText(
           typeof resultAction.payload === 'string'
             ? resultAction.payload

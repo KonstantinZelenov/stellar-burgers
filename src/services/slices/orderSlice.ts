@@ -1,22 +1,41 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { orderBurgerApi, getOrderByNumberApi } from '../../utils/burger-api';
 import { TOrder } from '@utils-types';
-import { TOrdersData } from '@utils-types';
 import { getOrdersApi } from '../../utils/burger-api';
+import { createAction } from '@reduxjs/toolkit';
 
 type TOrdersState = {
   currentOrder: TOrder | null;
   orders: TOrder[];
   isLoading: boolean;
   error: string | null;
+  backgroundLocation?: {
+    pathname: string;
+    search: string;
+    hash: string;
+    state: unknown;
+    key: string;
+  };
 };
 
 const initialState: TOrdersState = {
   currentOrder: null,
   orders: [],
   isLoading: false,
-  error: null
+  error: null,
+  backgroundLocation: undefined
 };
+
+export const saveBackgroundLocation = createAction<
+  | {
+      pathname: string;
+      search: string;
+      hash: string;
+      state: unknown;
+      key: string;
+    }
+  | undefined
+>('orders/saveBackgroundLocation');
 
 export const createOrder = createAsyncThunk(
   'orders/create',
@@ -66,10 +85,14 @@ export const ordersSlice = createSlice({
     selectCurrentOrder: (state) => state.currentOrder,
     selectOrders: (state) => state.orders,
     selectOrdersLoading: (state) => state.isLoading,
-    selectOrdersError: (state) => state.error
+    selectOrdersError: (state) => state.error,
+    selectBackgroundLocation: (state) => state.backgroundLocation
   },
   extraReducers: (builder) => {
     builder
+      .addCase(saveBackgroundLocation, (state, action) => {
+        state.backgroundLocation = action.payload;
+      })
       .addCase(createOrder.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -119,6 +142,7 @@ export const {
   selectCurrentOrder,
   selectOrders,
   selectOrdersLoading,
-  selectOrdersError
+  selectOrdersError,
+  selectBackgroundLocation
 } = ordersSlice.selectors;
 export default ordersSlice.reducer;

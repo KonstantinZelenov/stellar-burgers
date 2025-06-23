@@ -8,13 +8,12 @@ import {
   clearConstructor,
   selectConstructorItems
 } from '../../services/slices/burgerConstructorSlice';
-import { RootState } from '../../services/store';
 import { fetchUserOrders } from '../../services/slices/orderSlice';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user } = useSelector((state) => state.auth);
 
   const { bun, ingredients } = useSelector(selectConstructorItems);
   const [orderRequest, setOrderRequest] = useState(false);

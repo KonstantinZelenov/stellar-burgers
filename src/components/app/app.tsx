@@ -3,7 +3,7 @@ import styles from './app.module.css';
 import { AppHeader } from '@components';
 import { FC, useEffect } from 'react';
 import { fetchIngredients } from '../../services/slices/ingredientsSlice';
-import { useDispatch, useSelector } from '../../services/store';
+import { useDispatch } from '../../services/store';
 import {
   ConstructorPage,
   Feed,
@@ -18,18 +18,50 @@ import {
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { IngredientDetails, OrderInfo } from '../../components';
 import { Modal } from '../modal/modal';
-import { RootState } from '../../services/store';
 import { ProtectedRoute } from '../protected/protected-route';
 import { checkUserAuth } from '../../services/slices/authSlice';
+import {
+  saveBackgroundLocation,
+  selectBackgroundLocation
+} from '../../services/slices/orderSlice';
+import { useSelector } from '../../services/store';
 
 const App: FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const background = location.state?.background;
   const dispatch = useDispatch();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const backgroundLocation = useSelector(selectBackgroundLocation);
+
+  useEffect(() => {
+    if (location.state?.background) {
+      dispatch(
+        saveBackgroundLocation({
+          pathname: location.state.background.pathname,
+          search: location.state.background.search,
+          hash: location.state.background.hash,
+          state: location.state.background.state,
+          key: location.state.background.key
+        })
+      );
+    }
+  }, [location, dispatch]);
+
+  useEffect(() => {
+    if (
+      backgroundLocation &&
+      (location.pathname.startsWith('/profile/orders/') ||
+        location.pathname.startsWith('/feed/'))
+    ) {
+      navigate(location.pathname, {
+        replace: true,
+        state: { background: backgroundLocation }
+      });
+    }
+  }, [backgroundLocation, location, navigate]);
 
   const handleModalClose = () => {
+    dispatch(saveBackgroundLocation(undefined));
     navigate(-1);
   };
 
@@ -135,9 +167,11 @@ const App: FC = () => {
           <Route
             path='/profile/orders/:number'
             element={
-              <Modal title='Детали заказа' onClose={handleModalClose}>
-                <OrderInfo />
-              </Modal>
+              <ProtectedRoute>
+                <Modal title='Детали заказа' onClose={handleModalClose}>
+                  <OrderInfo />
+                </Modal>
+              </ProtectedRoute>
             }
           />
         </Routes>

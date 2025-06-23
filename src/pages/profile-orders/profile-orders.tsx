@@ -1,7 +1,6 @@
 import { FC } from 'react';
-import { useSelector } from '../../services/store';
 import { ProfileOrdersUI } from '@ui-pages';
-import { useDispatch } from '../../services/store';
+import { useDispatch, useSelector } from '../../services/store';
 import { useEffect } from 'react';
 import { Preloader } from '@ui';
 import {

@@ -1,9 +1,9 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
-import { useSelector, RootState } from '../../services/store';
+import { useSelector } from '../../services/store';
 
 export const Profile: FC = () => {
-  const user = useSelector((state: RootState) => state.auth.user);
+  const user = useSelector((state) => state.auth.user);
 
   const [formValue, setFormValue] = useState({
     name: user?.name || '',
