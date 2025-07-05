@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import {
   Input,
   Button,
@@ -59,7 +59,12 @@ export const RegisterUI: FC<RegisterUIProps> = ({
             />
           </div>
           <div className={`pb-6 ${styles.button}`}>
-            <Button type='primary' size='medium' htmlType='submit'>
+            <Button
+              type='primary'
+              size='medium'
+              htmlType='submit'
+              disabled={!userName || !email || !password}
+            >
               Зарегистрироваться
             </Button>
           </div>
