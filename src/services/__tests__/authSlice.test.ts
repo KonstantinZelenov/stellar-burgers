@@ -10,6 +10,7 @@ import authReducer, {
   TAuthState
 } from '../slices/authSlice';
 import { TUser } from '@utils-types';
+import { expect } from '@jest/globals';
 
 const mockUser: TUser = {
   email: 'test@example.com',

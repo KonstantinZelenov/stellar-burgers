@@ -6,6 +6,7 @@ import ingredientsReducer, {
   TIngredientsState
 } from '../slices/ingredientsSlice';
 import { TIngredient } from '@utils-types';
+import { expect } from '@jest/globals';
 
 const mockIngredients: TIngredient[] = [
   {

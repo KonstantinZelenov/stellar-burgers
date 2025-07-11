@@ -12,6 +12,7 @@ import ordersReducer, {
   TOrdersState
 } from '../slices/orderSlice';
 import { TOrder } from '@utils-types';
+import { expect } from '@jest/globals';
 
 const mockOrder: TOrder = {
   _id: '1',

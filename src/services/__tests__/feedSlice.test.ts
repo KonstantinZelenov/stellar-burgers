@@ -9,6 +9,7 @@ import feedReducer, {
   TFeedState
 } from '../slices/feedSlice';
 import { TOrder } from '@utils-types';
+import { expect } from '@jest/globals';
 
 const mockOrders: TOrder[] = [
   {

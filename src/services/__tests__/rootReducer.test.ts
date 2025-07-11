@@ -5,6 +5,7 @@ import burgerConstructorReducer from '../slices/burgerConstructorSlice';
 import feedReducer from '../slices/feedSlice';
 import authReducer from '../slices/authSlice';
 import ordersReducer from '../slices/orderSlice';
+import { expect } from '@jest/globals';
 
 describe('rootReducer initialization', () => {
   test('Корневой редьюсер правильно инициализирует состояние хранилища при старте приложения. Должен возвращать корректное начальное состояние даже для неизвестного действия', () => {
