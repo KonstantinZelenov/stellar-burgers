@@ -15,7 +15,7 @@ export type TAuthState = {
   error: string | null;
 };
 
-const initialState: TAuthState = {
+export const initialState: TAuthState = {
   user: null,
   isLoading: false,
   error: null

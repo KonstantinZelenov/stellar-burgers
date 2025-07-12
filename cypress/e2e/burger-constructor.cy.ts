@@ -33,6 +33,7 @@ describe('Stellar Burgers Tests', () => {
   });
 
   it('1. Проверяет добавление ингредиентов', () => {
+    cy.get(CONSTRUCTOR_ELEMENT).should('not.exist');
     cy.get(INGREDIENT).should('have.length.at.least', 5);
 
     cy.get(INGREDIENT)
@@ -49,19 +50,27 @@ describe('Stellar Burgers Tests', () => {
         cy.get('button').first().click();
       });
 
-    cy.get(CONSTRUCTOR_ELEMENT, { timeout: 5000 }).should('exist');
+    cy.get(CONSTRUCTOR_ELEMENT)
+      .contains('Краторная булка N-200i')
+      .should('exist');
+
+    cy.get(CONSTRUCTOR_ELEMENT)
+      .contains('Биокотлета из марсианской Магнолии')
+      .should('exist');
   });
 
   it('2. Проверяет модальное окно ингредиента', () => {
+    cy.get(MODAL).should('not.exist');
     cy.get(INGREDIENT)
       .contains('Краторная булка N-200i')
+      .should('exist')
       .click({ force: true });
 
     cy.get(MODAL, { timeout: 10000 })
       .should('be.visible')
       .within(() => {
         cy.contains('h3', 'Детали ингредиента').should('exist');
-        cy.get(MODAL_CLOSE).should('exist');
+        cy.get(MODAL_CLOSE).should('exist').and('be.enabled');
       });
 
     cy.get(MODAL).within(() => {
@@ -74,23 +83,40 @@ describe('Stellar Burgers Tests', () => {
   });
 
   it('3. Проверяет закрытие через оверлей', () => {
+    cy.get(MODAL).should('not.exist');
+
     cy.get(INGREDIENT)
       .contains('Краторная булка N-200i')
+      .should('exist')
       .click({ force: true });
 
     cy.get(MODAL, { timeout: 10000 }).should('exist').and('be.visible');
 
-    cy.get(MODAL_OVERLAY).should('exist').click({ force: true });
+    cy.get(MODAL_OVERLAY)
+      .should('exist')
+      .and('have.css', 'pointer-events', 'auto')
+      .click({ force: true });
     cy.get(MODAL).should('not.exist');
   });
 
   it('4. Проверяет создание заказа', () => {
+    cy.get('[data-cy="constructor-empty"]').should('exist');
+    cy.get('[data-cy="constructor-bun-top"]').should('not.exist');
+    cy.get('[data-cy="constructor-bun-bottom"]').should('not.exist');
+
     cy.get(INGREDIENT)
       .contains('Краторная булка N-200i')
       .parents(INGREDIENT)
       .find('button')
       .first()
       .click();
+
+    cy.get('[data-cy="constructor-bun-top"]')
+      .should('exist')
+      .and('contain', 'Краторная булка N-200i');
+    cy.get('[data-cy="constructor-bun-bottom"]')
+      .should('exist')
+      .and('contain', 'Краторная булка N-200i');
 
     cy.get(INGREDIENT)
       .contains('Биокотлета из марсианской Магнолии')
@@ -98,6 +124,11 @@ describe('Stellar Burgers Tests', () => {
       .find('button')
       .first()
       .click();
+
+    cy.get('[data-cy="constructor-ingredients"]').should(
+      'contain',
+      'Биокотлета из марсианской Магнолии'
+    );
 
     cy.get(ORDER_BUTTON).should('be.enabled').click();
 
@@ -113,6 +144,13 @@ describe('Stellar Burgers Tests', () => {
       });
 
     cy.get(MODAL).should('not.exist');
-    cy.get('[data-cy="constructor-item"]').should('not.exist');
+
+    cy.get('[data-cy="constructor-ingredients"]')
+      .should('not.contain', 'Биокотлета из марсианской Магнолии')
+      .and('contain', 'Выберите начинку');
+
+    cy.get('[data-cy="constructor-empty"]').should('exist');
+    cy.get('[data-cy="constructor-bun-top"]').should('not.exist');
+    cy.get('[data-cy="constructor-bun-bottom"]').should('not.exist');
   });
 });
