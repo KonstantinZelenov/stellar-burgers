@@ -7,7 +7,10 @@ export const OrderDetailsUI: React.FC<OrderDetailsUIProps> = ({
   orderNumber
 }) => (
   <>
-    <h2 className={`${styles.title} text text_type_digits-large mt-2 mb-4`}>
+    <h2
+      className={`${styles.title} text text_type_digits-large mt-2 mb-4`}
+      data-cy='order-details-number'
+    >
       {orderNumber}
     </h2>
     <p className='text text_type_main-medium'>идентификатор заказа</p>
@@ -15,6 +18,7 @@ export const OrderDetailsUI: React.FC<OrderDetailsUIProps> = ({
       className={styles.img}
       src={doneImg}
       alt='изображение статуса заказа.'
+      data-cy='order-details-image'
     />
     <p className='text text_type_main-default mb-1'>
       Ваш заказ начали готовить

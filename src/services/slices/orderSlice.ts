@@ -4,7 +4,7 @@ import { TOrder } from '@utils-types';
 import { getOrdersApi } from '../../utils/burger-api';
 import { createAction } from '@reduxjs/toolkit';
 
-type TOrdersState = {
+export type TOrdersState = {
   currentOrder: TOrder | null;
   orders: TOrder[];
   isLoading: boolean;
@@ -18,7 +18,7 @@ type TOrdersState = {
   };
 };
 
-const initialState: TOrdersState = {
+export const initialState: TOrdersState = {
   currentOrder: null,
   orders: [],
   isLoading: false,

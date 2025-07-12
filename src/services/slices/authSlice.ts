@@ -9,13 +9,13 @@ import { getUserApi } from '../../utils/burger-api';
 import { setCookie } from '../../utils/cookie';
 import { deleteCookie } from '../../utils/cookie';
 
-type TAuthState = {
+export type TAuthState = {
   user: TUser | null;
   isLoading: boolean;
   error: string | null;
 };
 
-const initialState: TAuthState = {
+export const initialState: TAuthState = {
   user: null,
   isLoading: false,
   error: null

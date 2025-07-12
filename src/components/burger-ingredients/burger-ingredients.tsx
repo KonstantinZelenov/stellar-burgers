@@ -7,14 +7,20 @@ import {
 } from '../../services/slices/ingredientsSlice';
 import { TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
+import { useMemo } from 'react';
 
 export const BurgerIngredients: FC = () => {
   const ingredients = useSelector(selectIngredients);
   const isLoading = useSelector(selectIsLoading);
 
-  const buns = ingredients.filter((item) => item.type === 'bun');
-  const mains = ingredients.filter((item) => item.type === 'main');
-  const sauces = ingredients.filter((item) => item.type === 'sauce');
+  const [buns, mains, sauces] = useMemo(
+    () => [
+      ingredients.filter((item) => item.type === 'bun'),
+      ingredients.filter((item) => item.type === 'main'),
+      ingredients.filter((item) => item.type === 'sauce')
+    ],
+    [ingredients]
+  );
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);

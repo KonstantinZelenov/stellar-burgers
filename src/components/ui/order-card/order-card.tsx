@@ -17,20 +17,27 @@ export const OrderCardUI: FC<OrderCardUIProps> = memo(
       relative='path'
       state={locationState}
       className={`p-6 mb-4 mr-2 ${styles.order}`}
+      data-cy='order-card'
     >
       <div className={styles.order_info}>
-        <span className={`text text_type_digits-default ${styles.number}`}>
+        <span
+          className={`text text_type_digits-default ${styles.number}`}
+          data-cy='order-number'
+        >
           #{String(orderInfo.number).padStart(6, '0')}
         </span>
         <span className='text text_type_main-default text_color_inactive'>
           <FormattedDate date={orderInfo.date} />
         </span>
       </div>
-      <h4 className={`pt-6 text text_type_main-medium ${styles.order_name}`}>
+      <h4
+        className={`pt-6 text text_type_main-medium ${styles.order_name}`}
+        data-cy='order-name'
+      >
         {orderInfo.name}
       </h4>
       {location.pathname === '/profile/orders' && (
-        <OrderStatus status={orderInfo.status} />
+        <OrderStatus status={orderInfo.status} data-cy='order-status' />
       )}
       <div className={`pt-6 ${styles.order_content}`}>
         <ul className={styles.ingredients}>
