@@ -6,7 +6,7 @@ import { ProfileOrdersUIProps } from './type';
 import { ProfileMenu, OrdersList } from '@components';
 
 export const ProfileOrdersUI: FC<ProfileOrdersUIProps> = ({ orders }) => (
-  <main className={`${styles.main}`}>
+  <main className={`${styles.main}`} data-cy='profile-orders'>
     <div className={`mt-30 mr-15 ${styles.menu}`}>
       <ProfileMenu />
     </div>
